@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <title>Document</title>
+  <title>Home</title>
 </head>
 <body>
 
@@ -19,8 +20,14 @@
     <h2>Create a New Post</h2>
     <form action="/create-post" method="POST">
       @csrf
-      <input type="text" name="title" placeholder="post title">
-      <textarea name="body" placeholder="body content..."></textarea>
+      <input type="text" name="title" placeholder="Post title">
+      <textarea name="body" placeholder="Body content..."></textarea>
+      <select name="status" required>
+        <option value="Completado">Completado</option>
+        <option value="Drop">Drop</option>
+        <option value="Platinado">Platinado</option>
+        <option value="On-Hold">On-Hold</option>
+      </select>
       <button>Save Post</button>
     </form>
   </div>
@@ -30,6 +37,7 @@
     @foreach($posts as $post)
     <div style="background-color: gray; padding: 10px; margin: 10px;">
       <h3>{{$post['title']}} by {{$post->user->name}}</h3>
+      <p>Status: {{$post['status']}}</p> <!-- Agregado para mostrar el estado -->
       {{$post['body']}}
       <p><a href="/edit-post/{{$post->id}}">Edit</a></p>
       <form action="/delete-post/{{$post->id}}" method="POST">
