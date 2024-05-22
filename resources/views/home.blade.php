@@ -49,7 +49,28 @@
     @endforeach
   </div>
 
+  <!-- Barra de búsqueda de usuarios -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Search Users</div>
+
+                <div class="card-body">
+                    <form action="{{ route('users.search') }}" method="GET">
+                        <div class="input-group mb-3">
+                            <input type="text" name="query" class="form-control" placeholder="Search users...">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
   @else
+  <!-- Código de registro y inicio de sesión -->
   <div style="border: 3px solid black;">
     <h2>Register</h2>
     <form action="/register" method="POST">
@@ -128,6 +149,4 @@
   @endauth
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="

@@ -38,4 +38,19 @@ class UserController extends Controller
         auth()->login($user);
         return redirect('/');
     }
+
+    public function search(Request $request) {
+        $query = $request->input('query');
+
+        // Buscar usuarios que coincidan con la consulta
+        $users = User::where('name', 'LIKE', "%$query%")->get();
+
+        // Para cada usuario encontrado, obtener sus posts asociados
+        foreach ($users as $user) {
+            $user->load('posts');
+        }
+
+        // Pasar los usuarios y sus posts a la vista
+        return view('user-search-results', ['users' => $users]);
+    }
 }
