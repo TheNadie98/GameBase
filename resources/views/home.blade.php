@@ -1,152 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <title>Home</title>
-</head>
-<body>
+@extends('layouts.layout')
 
-  @auth
-  <p>Congrats you are logged in.</p>
-  <form action="/logout" method="POST">
-    @csrf
-    <button>Log out</button>
-  </form>
+@section('title', 'Home')
 
-  <div style="border: 3px solid black;">
-    <h2>Create a New Post</h2>
-    <form action="/create-post" method="POST">
-      @csrf
-      <input type="text" name="title" placeholder="Post title">
-      <textarea name="body" placeholder="Body content..."></textarea>
-      <select name="status" required>
-        <option value="Completado">Completado</option>
-        <option value="Drop">Drop</option>
-        <option value="Platinado">Platinado</option>
-        <option value="On-Hold">On-Hold</option>
-      </select>
-      <button>Save Post</button>
-    </form>
-  </div>
-
-  <div style="border: 3px solid black;">
-    <h2>All Posts</h2>
-    @foreach($posts as $post)
-    <div style="background-color: gray; padding: 10px; margin: 10px;">
-      <h3>{{$post['title']}} by {{$post->user->name}}</h3>
-      <p>Status: {{$post['status']}}</p> <!-- Agregado para mostrar el estado -->
-      {{$post['body']}}
-      <p><a href="/edit-post/{{$post->id}}">Edit</a></p>
-      <form action="/delete-post/{{$post->id}}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button>Delete</button>
+@section('content')
+@auth
+  <!-- Barra de búsqueda de usuarios -->
+  <div class="card mt-3 position-fixed" style="top: 10px; right: 10px;">
+    <div class="card-header">Buscar usuario</div>
+    <div class="card-body">
+      <form action="{{ route('users.search') }}" method="GET">
+        <div class="input-group">
+          <input type="text" name="query" class="form-control" placeholder="Kratos...">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </div>
       </form>
     </div>
-    @endforeach
   </div>
 
-  <!-- Barra de búsqueda de usuarios -->
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Search Users</div>
+  <div class="bg-dark bg-opacity-75 p-3 rounded">
+    <h2 class="text-white">Bienvenido a GameBase tu biblioteca de videojuegos.</h2>
+</div>
 
-                <div class="card-body">
-                    <form action="{{ route('users.search') }}" method="GET">
-                        <div class="input-group mb-3">
-                            <input type="text" name="query" class="form-control" placeholder="Search users...">
-                            <button class="btn btn-primary" type="submit">Search</button>
-                        </div>
-                    </form>
-                </div>
+  <form action="/logout" method="POST">
+    @csrf
+    <button class="btn btn-danger mt-3">Log out</button>
+  </form>
+
+  <!-- Creacion de nuevo post-->
+  <div class="card mt-5">
+    <div class="card-header">
+      <h2>Añade un nuevo titulo</h2>
+    </div>
+    <div class="card-body">
+      <form action="/create-post" method="POST">
+        @csrf
+        <div class="form-group mb-3">
+          <label for="title">Titulo</label>
+          <input type="text" name="title" class="form-control" placeholder="Escribe el titulo">
+        </div>
+        <div class="form-group mb-3">
+          <label for="body">Resumen</label>
+          <textarea name="body" class="form-control" placeholder="Contenido..."></textarea>
+        </div>
+        <div class="form-group mb-3">
+          <label for="status">Estado</label>
+          <select name="status" class="form-control">
+            <option value="Completado">Completado</option>
+            <option value="Drop">Drop</option>
+            <option value="Platinado">Platinado</option>
+            <option value="On-Hold">On-Hold</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Titulo</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mt-5">
+    <div class="card-header">
+      <h2>Todos los titulos</h2>
+    </div>
+    <div class="card-body">
+      @foreach($posts as $post)
+        <div class="card mb-3">
+          <div class="card-body">
+            <h3 class="card-title">{{$post['title']}} by {{$post->user->name}}</h3>
+            <p class="card-text">Estado: {{$post['status']}}</p>
+            <p class="card-text">{{$post['body']}}</p>
+            <a href="/edit-post/{{$post->id}}" class="btn btn-secondary">Editar</a>
+            <form action="/delete-post/{{$post->id}}" method="POST" class="d-inline">
+              @csrf
+              @method('DELETE')
+              <button class="btn btn-danger">Borrar</button>
+            </form>
+          </div>
+        </div>
+      @endforeach
+    </div>
+  </div>
+
+
+@else
+  <div class="alert alert-warning mt-5" role="alert">
+    Tu biblioteca personal de Videojuegos.
+  </div>
+   <!-- Aquí mostramos la imagen de GameBase y los botones de Login y Register y el fondo de pantalla -->
+   <style>
+    body {
+        background-image: url('{{ asset('imagenes/mosaicofondo.jpeg') }}');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh; 
+        margin: 0; 
+        padding: 0; 
+    }
+
+    .button-container {
+        background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco con opacidad */
+        padding: 20px; /* Espacio alrededor de los botones */
+        border-radius: 10px; /* Bordes redondeados */
+    }
+</style>
+
+<div class="background-image d-flex justify-content-center align-items-center">
+    <div class="mt-5 text-center">
+        <div class="container" style="max-width: 500px;">
+            <img src="{{ asset('imagenes/GameBase.png') }}" alt="GameBase Image" class="img-fluid" style="max-width: 100%; height: auto;">
+            <div class="mt-3 button-container">
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg btn-block mb-6">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-success btn-lg btn-block mb-6">Registrate</a>
             </div>
         </div>
     </div>
 </div>
 
-  @else
-  <!-- Código de registro y inicio de sesión -->
-  <div style="border: 3px solid black;">
-    <h2>Register</h2>
-    <form action="/register" method="POST">
-      @csrf
-      <input name="name" type="text" placeholder="name">
-      <input name="email" type="text" placeholder="email">
-      <input name="password" type="password" placeholder="password">
-      <button>Register</button>
-    </form>
-  </div>
-  <div style="border: 3px solid black;">
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-      @csrf
-      <input name="loginname" type="text" placeholder="name">
-      <input name="loginpassword" type="password" placeholder="password">
-      <button>Log in</button>
-    </form>
-  </div>
-  
-  <section class="vh-100" style="background-color: #eee;">
-    <div class="container h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-          <div class="card text-black" style="border-radius: 25px;">
-            <div class="card-body p-md-5">
-              <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-  
-                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registrate</p>
-  
-                  <form action="/register" method="POST" class="mx-1 mx-md-4">
-                    @csrf
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                      <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                        <input name="name" type="text" id="name" class="form-control" />
-                        <label class="form-label" for="form3Example1c">Nombre</label>
-                      </div>
-                    </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                      <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                        <input name="email" type="email" id="email" class="form-control" />
-                        <label class="form-label" for="form3Example3c">Email</label>
-                      </div>
-                    </div>
-  
-                    <div class="d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                      <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                        <input name="password" type="password" id="password" class="form-control" />
-                        <label class="form-label" for="form3Example4c">Contraseña</label>
-                      </div>
-                    </div>
-                   
-                      <button>Registrarse</button>
-  
-                  </form>
-  
-                </div>
-                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-  
-                  <img src="{{ asset('imagenes/GameBase.png') }}" class="img-fluid" alt="Sample image">
-  
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  @endauth
 
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="
+@endauth
+@endsection

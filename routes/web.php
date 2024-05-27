@@ -28,3 +28,12 @@ Route::get('/users/{user}/posts', [PostController::class, 'showUserPosts'])->nam
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout']);
 Route::post('/login', [UserController::class, 'login']);
+
+// Nuevas rutas para las vistas de login y registro
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
