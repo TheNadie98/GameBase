@@ -51,6 +51,24 @@
             <option value="On-Hold">On-Hold</option>
           </select>
         </div>
+        <div class="form-group mb-3">
+          <label for="platform">Plataforma</label>
+          <select name="platform" id="platform" class="form-control" required>
+              <option value="PS1">PS1</option>
+              <option value="PS2">PS2</option>
+              <option value="PS3">PS3</option>
+              <option value="PS4">PS4</option>
+              <option value="PS5">PS5</option>
+              <option value="XBOX">XBOX</option>
+              <option value="XBOX360">XBOX360</option>
+              <option value="XBOX One">XBOX One</option>
+              <option value="XBOX Series X|S">XBOX Series X|S</option>
+              <option value="Nintendo SW">Nintendo SW</option>
+              <option value="Nintendo DS">Nintendo DS</option>
+              <option value="Nintendo 3DS">Nintendo 3DS</option>
+              <option value="PC">PC</option>
+          </select>
+      </div>
         <button type="submit" class="btn btn-primary">Guardar Titulo</button>
       </form>
     </div>
@@ -67,6 +85,7 @@
             <h3 class="card-title">{{$post['title']}} by {{$post->user->name}}</h3>
             <p class="card-text">Estado: {{$post['status']}}</p>
             <p class="card-text">{{$post['body']}}</p>
+            <p class="card-text">Plataforma: {{$post['platform']}}</p>
             <a href="/edit-post/{{$post->id}}" class="btn btn-secondary">Editar</a>
             <form action="/delete-post/{{$post->id}}" method="POST" class="d-inline">
               @csrf

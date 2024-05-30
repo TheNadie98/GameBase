@@ -5,26 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
-    //Borrar post
+    // Borrar post
     public function deletePost(Post $post) {
         if (auth()->user()->id === $post->user_id) {
             $post->delete();
         }
         return redirect('/');
     }
-//Edicion de post
+
+    // Edición de post
     public function actuallyUpdatePost(Post $post, Request $request) {
-        if (auth()->user()->id !== $post['user_id']) {
+        if (auth()->user()->id !== $post->user_id) {
             return redirect('/');
         }
     
         $incomingFields = $request->validate([
             'title' => 'required',
             'body' => 'required',
-            'status' => 'required|string|in:Completado,Drop,Platinado,On-Hold'
+            'status' => 'required|string|in:Completado,Drop,Platinado,On-Hold',
+            'platform' => ['nullable', 'string', 'in:PS1,PS2,PS3,PS4,PS5,XBOX,XBOX360,XBOX One,XBOX Series X|S,Nintendo SW,Nintendo DS,Nintendo 3DS,PC']
         ]);
     
         $incomingFields['title'] = strip_tags($incomingFields['title']);
@@ -34,7 +37,7 @@ class PostController extends Controller
         return redirect('/');
     }
     
-//Edicion de post, vista de edicion de post
+    // Edición de post, vista de edición de post
     public function showEditScreen(Post $post) {
         if (auth()->user()->id !== $post->user_id) {
             return redirect('/');
@@ -43,20 +46,20 @@ class PostController extends Controller
         return view('edit-post', ['post' => $post]);
     }
 
-    //Bucar por nombre de usuario y que me salgan los post 
+    // Buscar por nombre de usuario y que me salgan los posts 
     public function searchUserPosts(Request $request) {
         $user = User::where('name', 'like', '%' . $request->query('query') . '%')->first();
         $posts = $user ? $user->posts : [];
         return view('user-searchpost', compact('user', 'posts'));
     }
     
-    // Creacion de post  
-
+    // Creación de post
     public function createPost(Request $request) {
         $incomingFields = $request->validate([
             'title' => 'required',
             'body' => 'required',
-            'status' => 'required|string|in:Completado,Drop,Platinado,On-Hold'
+            'status' => 'required|string|in:Completado,Drop,Platinado,On-Hold',
+            'platform' => ['required', 'string', Rule::in(['PS1','PS2','PS3','PS4','PS5','XBOX','XBOX360','XBOX One','XBOX Series X|S','Nintendo SW','Nintendo DS','Nintendo 3DS','PC'])]
         ]);
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);

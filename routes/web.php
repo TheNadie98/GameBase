@@ -25,7 +25,7 @@ Route::get('/user-searchpost', [PostController::class, 'searchUserPosts'])->name
 Route::get('/users/{user}/posts', [PostController::class, 'showUserPosts'])->name('users.posts');
 
 // Rutas relacionadas con el controlador de usuarios
-Route::post('/register', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/logout', [UserController::class, 'logout']);
 Route::post('/login', [UserController::class, 'login']);
 
