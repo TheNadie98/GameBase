@@ -65,7 +65,8 @@
                                     <li class="list-group-item">
                                         <span class="post-title">{{ $post->title }}</span><br>
                                         <span class="post-body">{{ $post->body }}</span><br>
-                                        <span class="post-status">{{ $post->status }}</span>
+                                        <span class="post-status">{{ $post->status }}</span> <br>
+                                        <span class="platform">{{$post->platform}}</span>
                                     </li>
                                 @endforeach
                             </ul>
